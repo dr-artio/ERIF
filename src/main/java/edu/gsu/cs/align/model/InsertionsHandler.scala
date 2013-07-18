@@ -1,7 +1,8 @@
 package edu.gsu.cs.align.model
 
-import net.sf.samtools.SAMRecord
+import net.sf.samtools.{CigarOperator, SAMRecord}
 import collection.JavaConversions._
+import scala.collection.mutable.ListBuffer
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,12 +12,21 @@ import collection.JavaConversions._
  * To change this template use File | Settings | File Templates.
  */
 object InsertionsHandler {
-  def buildInsertionTable(reads: Iterable[SAMRecord], n: Int) = {
-    val insertions = new Array[List[SAMRecord]](n)
-    for (read <- reads){
-      var pos = read.getAlignmentStart
-      for (ce <- read.getCigar.getCigarElements) {
+  var insertions: IndexedSeq[ListBuffer[SAMRecord]] = null
+  var extInserts: Array[Int] = null
 
+  def buildInsertionTable(reads: Iterable[SAMRecord], n: Int) = {
+    insertions = (1 to n).map(x => new ListBuffer[SAMRecord])
+    extInserts = new Array[Int](n)
+    for (read <- reads){
+      var pos = read.getAlignmentStart - 1
+      for (ce <- read.getCigar.getCigarElements) {
+        if (ce.getOperator.consumesReferenceBases) {
+          pos += ce.getLength
+        } else {
+          insertions(pos) += read
+          if (extInserts(pos) < ce.getLength) extInserts(pos) = ce.getLength
+        }
       }
     }
   }

@@ -2,6 +2,7 @@ package edu.gsu.cs.align.exec
 
 import edu.gsu.cs.align.io.SAMParser
 import java.io.FileNotFoundException
+import edu.gsu.cs.align.model.InsertionsHandler
 
 
 /**
@@ -27,6 +28,8 @@ object Main {
       path_to_sam = if (sam == -1) runInDelFixer(args) else args(sam + 1)
 
       val reads = SAMParser.readSAMFile(path_to_sam)
+      val n = reads.map(r => r.getAlignmentStart + r.getReadLength).max
+      InsertionsHandler.buildInsertionTable(reads, n)
 
     } catch {
       case e: FileNotFoundException => {
