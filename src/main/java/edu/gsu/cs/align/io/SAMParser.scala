@@ -3,6 +3,7 @@ package edu.gsu.cs.align.io
 import java.io.File
 import net.sf.samtools.{SAMFileReader, SAMRecord}
 import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,12 +22,12 @@ object SAMParser {
   def readSAMFile(f: File): Iterable[SAMRecord] = {
     if (!f.exists()) {
       System.err.println("File not found!")
-      return null
+      System.exit(-1)
     }
     val reader = new SAMFileReader(f)
-    var res = new mutable.MutableList[SAMRecord]()
+    var res = new ListBuffer[SAMRecord]()
     val iter = reader.iterator
     while (iter.hasNext) res += iter.next
-    res
+    res.toList
   }
 }

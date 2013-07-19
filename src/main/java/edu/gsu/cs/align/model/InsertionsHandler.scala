@@ -30,4 +30,14 @@ object InsertionsHandler {
       }
     }
   }
+
+  def getExtendedReference(ref: String) = {
+    val length = ref.length
+    val sb = new StringBuilder(2 * length)
+    for (i <- 0 until length) {
+      for (s <- 0 until extInserts(i)) sb += '-'
+      sb += ref(i)
+    }
+    sb.toString
+  }
 }

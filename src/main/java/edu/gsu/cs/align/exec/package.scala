@@ -20,8 +20,14 @@ package object exec {
   var output_folder: File = null
 
   def runInDelFixer(args: Array[String]) = {
-    Boot.run(args)
-
+    try {
+      Boot.run(args)
+    } catch {
+      case e: Exception => {
+        System.err.println(e.getMessage)
+        System.exit(-1)
+      }
+    }
     val o = args.indexOf(OUTPUT_PARAMETER)
     if (o == -1) output_folder = new File(System.getProperty(USER_DIR))
     else output_folder = new File(args(o + 1))
