@@ -19,7 +19,7 @@ object InsertionsHandler {
   def buildInsertionTable(reads: Iterable[SAMRecord], n: Int) = {
     insertions = (1 to n).map(x => new ListBuffer[SAMRecord])
     extInserts = new Array[Int](n)
-    extInsertsSecond = new Array[Int](n)
+
     for (read <- reads){
       var pos = read.getAlignmentStart - 1
       for (ce <- read.getCigar.getCigarElements) {
@@ -27,7 +27,6 @@ object InsertionsHandler {
           pos += ce.getLength
         } else {
           insertions(pos) += read
-          extInsertsSecond(pos) = extInserts(pos)
           if (extInserts(pos) < ce.getLength) extInserts(pos) = ce.getLength
         }
       }
@@ -37,9 +36,8 @@ object InsertionsHandler {
   def getExtendedReference(ref: String) = {
     val length = ref.length
     val sb = new StringBuilder(2 * length)
-    println(extInsertsSecond.max)
     for (i <- 0 until length) {
-      for (s <- 0 until extInsertsSecond(i)) sb += '-'
+      for (s <- 0 until extInserts(i)) sb += '-'
       sb += ref(i)
     }
     sb.toString
