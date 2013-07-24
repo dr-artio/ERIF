@@ -2,7 +2,7 @@ package edu.gsu.cs.align.exec
 
 import edu.gsu.cs.align.io.{FASTAParser, SAMParser}
 import java.io.FileNotFoundException
-import edu.gsu.cs.align.model.InsertionsHandler
+import edu.gsu.cs.align.model.{InsertionsAligner, InsertionsHandler}
 
 
 /**
