@@ -33,6 +33,8 @@ object FASTAParser {
 
   def writeAsFASTA(seq: String, path: String) = {
     val file = new File(path)
-    writeNucleotideSequence(file, List(new DNASequence(seq)))
+    val dnaSeq = new DNASequence(seq)
+    dnaSeq.setOriginalHeader("ExtConsensus")
+    writeNucleotideSequence(file, List(dnaSeq))
   }
 }

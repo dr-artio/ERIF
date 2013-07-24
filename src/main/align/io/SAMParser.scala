@@ -2,7 +2,6 @@ package edu.gsu.cs.align.io
 
 import java.io.File
 import net.sf.samtools.{SAMFileReader, SAMRecord}
-import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 /**
