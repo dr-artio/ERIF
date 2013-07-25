@@ -1,6 +1,5 @@
 package edu.gsu.cs.align.model
 
-import align.model.FractionalString
 import scala.collection.mutable.HashMap
 import net.sf.samtools.{CigarOperator, SAMRecord}
 import collection.JavaConversions._
@@ -15,6 +14,38 @@ import collection.JavaConversions._
 object InsertionsAligner {
   private var insertionsTable: Array[Map[SAMRecord, String]] = null
 
+  def transformRead(read: SAMRecord, ext_len: Int) = {
+    val sb = new StringBuilder
+    val readSeq = read.getReadString
+    var ext_index = 0
+    for (i <- 0 until read.getAlignmentStart) {
+      ext_index += edu.gsu.cs.align.model.InsertionsHandler.extInserts(i) + 1
+    }
+    sb ++= " " * ext_index
+    var i = 0
+    for (c <- read.getCigar.getCigarElements) {
+      if (c.getOperator.consumesReferenceBases) {
+        if (c.getOperator.consumesReadBases) {
+          for (j <- 0 until c.getLength) {
+            sb += readSeq(i)
+            sb ++= "-" * edu.gsu.cs.align.model.InsertionsHandler.extInserts(ext_index + 1)
+            ext_index += 1
+            i += 1
+          }
+        } else {
+          sb ++= "-" * c.getLength
+          ext_index += c.getLength
+        }
+      } else {
+        val ins = insertionsTable(ext_index - 1)(read)
+        sb ++= ins
+        i += c.getLength
+      }
+    }
+    sb ++= " " * (ext_len - sb.toString.length)
+    sb.toString
+  }
+
   /**
    * Perform alignment of inserted regions,
    * store aligned regions in the insertions
@@ -24,7 +55,7 @@ object InsertionsAligner {
     val len = insertionsTable.length
     for (i <- 0 until len) {
       val map = insertionsTable(i)
-      if (!map.empty) {
+      if (!map.isEmpty) {
         insertionsTable(i) = alignInsertedRegion(map)
       }
     }
@@ -35,17 +66,17 @@ object InsertionsAligner {
    * mapped to {@see SAMRecord} objects.
    * Prepare step for MSA heuristic
    * @param reads
-   *              Aligned reads (InDelFixer)
+   * Aligned reads (InDelFixer)
    * @param cons_len
-   *                 Length of the consensus (original)
+   * Length of the consensus (original)
    */
   def buildAndInitInsertionsTable(reads: Iterable[SAMRecord], cons_len: Int) = {
     val tmpTable = new Array[HashMap[SAMRecord, String]](cons_len)
     (0 until cons_len).foreach(i => tmpTable(i) = HashMap.empty[SAMRecord, String])
-    for (r <- reads){
+    for (r <- reads) {
       var i = r.getAlignmentStart - 1
       var j = 0
-      for (c <- r.getCigar.getCigarElements){
+      for (c <- r.getCigar.getCigarElements) {
         if (c.getOperator == CigarOperator.I) {
           tmpTable(i) += (r -> r.getReadString.substring(j, j + c.getLength))
         } else {
@@ -61,9 +92,9 @@ object InsertionsAligner {
    * Align inserted region sequences.
    * Regions come from global alignment.
    * @param seqs
-   *             Short inserted fragments
+   * Short inserted fragments
    * @return
-   *         Aligned fragments
+   * Aligned fragments
    */
   def alignInsertedRegion(seqs: Map[SAMRecord, String]) = {
     val result = HashMap.empty[SAMRecord, String]
@@ -131,11 +162,11 @@ object InsertionsAligner {
    * Generate all k-subsets of indices
    * from 0,...,n-1
    * @param n
-   *          Size of superset
+   * Size of superset
    * @param k
-   *          Size of subsets
+   * Size of subsets
    * @return
-   *         Collection of all possible k-subsets
+   * Collection of all possible k-subsets
    */
   def generateAllKSubsets(n: Int, k: Int) = {
     0 until n combinations k

@@ -1,5 +1,6 @@
 package edu.gsu.cs.align.model
 
+//import edu.gsu.cs.align.model.InsertionsHandler
 import org.scalatest.FunSuite
 import net.sf.samtools._
 

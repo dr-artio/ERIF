@@ -1,4 +1,4 @@
-package align.model
+package edu.gsu.cs.align.model
 
 import scala.collection.mutable
 

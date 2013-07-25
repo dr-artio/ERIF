@@ -14,7 +14,6 @@ import scala.collection.mutable.ListBuffer
 object InsertionsHandler {
   var insertions: IndexedSeq[ListBuffer[SAMRecord]] = null
   var extInserts: Array[Int] = null
-  var extInsertsSecond: Array[Int] = null
 
   def buildInsertionTable(reads: Iterable[SAMRecord], n: Int) = {
     insertions = (1 to n).map(x => new ListBuffer[SAMRecord])
@@ -37,8 +36,8 @@ object InsertionsHandler {
     val length = ref.length
     val sb = new StringBuilder(2 * length)
     for (i <- 0 until length) {
-      for (s <- 0 until extInserts(i)) sb += '-'
       sb += ref(i)
+      for (s <- 0 until extInserts(i)) sb += '-'
     }
     sb.toString
   }
