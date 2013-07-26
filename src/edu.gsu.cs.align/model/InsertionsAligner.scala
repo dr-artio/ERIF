@@ -13,6 +13,8 @@ import collection.JavaConversions._
  */
 object InsertionsAligner {
   private var insertionsTable: Array[Map[SAMRecord, String]] = null
+  private val S = " "
+  private val DASH = "-"
 
   def transformRead(read: SAMRecord, ext_len: Int) = {
     val sb = new StringBuilder
@@ -21,19 +23,19 @@ object InsertionsAligner {
     for (i <- 0 until read.getAlignmentStart) {
       ext_index += edu.gsu.cs.align.model.InsertionsHandler.extInserts(i) + 1
     }
-    sb ++= " " * ext_index
+    sb ++= S * ext_index
     var i = 0
     for (c <- read.getCigar.getCigarElements) {
       if (c.getOperator.consumesReferenceBases) {
         if (c.getOperator.consumesReadBases) {
           for (j <- 0 until c.getLength) {
             sb += readSeq(i)
-            sb ++= "-" * edu.gsu.cs.align.model.InsertionsHandler.extInserts(ext_index + 1)
+            sb ++= DASH * edu.gsu.cs.align.model.InsertionsHandler.extInserts(ext_index + 1)
             ext_index += 1
             i += 1
           }
         } else {
-          sb ++= "-" * c.getLength
+          sb ++= DASH * c.getLength
           ext_index += c.getLength
         }
       } else {
@@ -42,7 +44,7 @@ object InsertionsAligner {
         i += c.getLength
       }
     }
-    sb ++= " " * (ext_len - sb.toString.length)
+    sb ++= S * (ext_len - sb.toString.length)
     sb.toString
   }
 

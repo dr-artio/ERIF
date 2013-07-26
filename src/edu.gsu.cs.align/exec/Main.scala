@@ -30,9 +30,7 @@ object Main {
       val exRef = InsertionsHandler.getExtendedReference(ref.getSequenceAsString)
       val path_to_ext_ref = path_to_ref + "_ext.fasta"
       FASTAParser.writeAsFASTA(exRef, path_to_ext_ref)
-      //args(g + 1) = path_to_ext_ref
-      val subs = InsertionsAligner.generateAllKSubsets(10,2)
-      for (s <- subs) println (s)
+
 
     } catch {
       case e: FileNotFoundException => {
