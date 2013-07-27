@@ -1,6 +1,6 @@
 package edu.gsu.cs.align.exec
 
-import edu.gsu.cs.align.io.{FASTAParser, SAMParser}
+import edu.gsu.cs.align.io.{MSAWriter, FASTAParser, SAMParser}
 import java.io.FileNotFoundException
 import edu.gsu.cs.align.model.{InsertionsAligner, InsertionsHandler}
 
@@ -30,15 +30,19 @@ object Main {
       val exRef = InsertionsHandler.getExtendedReference(ref.getSequenceAsString)
       val path_to_ext_ref = path_to_ref + "_ext.fasta"
       FASTAParser.writeAsFASTA(exRef, path_to_ext_ref)
-
+      val ext_len = exRef.length
+      InsertionsAligner.buildAndInitInsertionsTable(reads, ext_len)
+      InsertionsAligner.performInsertionsAlignment
+      MSAWriter.writeExtendedReadsInInternalFormat(path_to_sam + "_ext.txt",
+        reads.map(r => InsertionsAligner.transformRead(r, ext_len)))
 
     } catch {
       case e: FileNotFoundException => {
         System.err.println(e.getMessage)
       }
       case e: IndexOutOfBoundsException => {
-        System.err.println("Wrong arguments! Use either -sam PATH to bypass alignment and send SAM file directly")
-        System.err.println("                 or set or parameters for InDelFixer")
+        System.err.println(e.getMessage)
+        e.printStackTrace
       }
     } finally {
         System.exit(0)

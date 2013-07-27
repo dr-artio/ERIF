@@ -27,7 +27,7 @@ class InsertionsAligner$Test extends FunSuite {
     val extRef = InsertionsHandler.getExtendedReference(cons_str)
     InsertionsAligner.buildAndInitInsertionsTable(List(read1, read2), 8)
     InsertionsAligner.performInsertionsAlignment
-    println(extRef)
+    println(extRef + ".")
     val extead2 = InsertionsAligner.transformRead(read2, 9)
     println(extead2 + ".")
     val extread1 = InsertionsAligner.transformRead(read1, 9)

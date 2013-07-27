@@ -30,7 +30,9 @@ object InsertionsAligner {
         if (c.getOperator.consumesReadBases) {
           for (j <- 0 until c.getLength) {
             sb += readSeq(i)
-            sb ++= DASH * edu.gsu.cs.align.model.InsertionsHandler.extInserts(ext_index + 1)
+            sb ++= DASH * (if (edu.gsu.cs.align.model.InsertionsHandler.extInserts.length > ext_index + 1)
+              edu.gsu.cs.align.model.InsertionsHandler.extInserts(ext_index + 1)
+              else 0)
             ext_index += 1
             i += 1
           }
