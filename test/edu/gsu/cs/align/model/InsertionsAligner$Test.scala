@@ -1,6 +1,5 @@
 package edu.gsu.cs.align.model
 
-//import edu.gsu.cs.align.model.{InsertionsAligner, InsertionsHandler}
 import org.scalatest.FunSuite
 import net.sf.samtools.{SAMLineParser, SAMSequenceRecord, SAMFileHeader}
 
@@ -27,10 +26,10 @@ class InsertionsAligner$Test extends FunSuite {
     val extRef = InsertionsHandler.getExtendedReference(cons_str)
     InsertionsAligner.buildAndInitInsertionsTable(List(read1, read2), extRef.length)
     InsertionsAligner.performInsertionsAlignment
-    println(extRef + ".")
+    assert("TAT--AGCT--T-".equals(extRef))
     val extead2 = InsertionsAligner.transformRead(read2, 13)
-    println(extead2 + ".")
+    assert(" A-CTA-CGCTAT".equals(extead2))
     val extread1 = InsertionsAligner.transformRead(read1, 13)
-    println(extread1 + ".")
+    assert(" AACTAG--CT- ".equals(extread1))
   }
 }

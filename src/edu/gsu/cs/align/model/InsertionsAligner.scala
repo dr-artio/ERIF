@@ -21,9 +21,10 @@ object InsertionsAligner {
     val readSeq = read.getReadString
     var ext_index = 0
     var index = read.getAlignmentStart - 1
-    for (i <- 0 until read.getAlignmentStart - 1) {
+    for (i <- 0 until read.getAlignmentStart) {
       ext_index += edu.gsu.cs.align.model.InsertionsHandler.extInserts(i) + 1
     }
+    ext_index -= 1
     sb ++= S * ext_index
     var i = 0
     for (c <- read.getCigar.getCigarElements) {
