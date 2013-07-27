@@ -20,7 +20,8 @@ object InsertionsAligner {
     val sb = new StringBuilder
     val readSeq = read.getReadString
     var ext_index = 0
-    for (i <- 0 until read.getAlignmentStart) {
+    var index = read.getAlignmentStart - 1
+    for (i <- 0 until read.getAlignmentStart - 1) {
       ext_index += edu.gsu.cs.align.model.InsertionsHandler.extInserts(i) + 1
     }
     sb ++= S * ext_index
@@ -29,19 +30,27 @@ object InsertionsAligner {
       if (c.getOperator.consumesReferenceBases) {
         if (c.getOperator.consumesReadBases) {
           for (j <- 0 until c.getLength) {
+            index += 1
             sb += readSeq(i)
-            sb ++= DASH * (if (edu.gsu.cs.align.model.InsertionsHandler.extInserts.length > ext_index + 1)
-              edu.gsu.cs.align.model.InsertionsHandler.extInserts(ext_index + 1)
+
+            sb ++= DASH * (if (!insertionsTable(index).contains(read))
+              edu.gsu.cs.align.model.InsertionsHandler.extInserts(index)
               else 0)
-            ext_index += 1
             i += 1
+
           }
         } else {
-          sb ++= DASH * c.getLength
-          ext_index += c.getLength
+          for (j <- 0 until c.getLength) {
+            index += 1
+            sb ++= DASH
+            sb ++= DASH * (if (!insertionsTable(index).contains(read))
+              edu.gsu.cs.align.model.InsertionsHandler.extInserts(index)
+              else 0)
+
+          }
         }
       } else {
-        val ins = insertionsTable(ext_index - 1)(read)
+        val ins = insertionsTable(index)(read)
         sb ++= ins
         i += c.getLength
       }
@@ -77,16 +86,17 @@ object InsertionsAligner {
   def buildAndInitInsertionsTable(reads: Iterable[SAMRecord], cons_len: Int) = {
     val tmpTable = new Array[HashMap[SAMRecord, String]](cons_len)
     (0 until cons_len).foreach(i => tmpTable(i) = HashMap.empty[SAMRecord, String])
+
     for (r <- reads) {
       var i = r.getAlignmentStart - 1
       var j = 0
       for (c <- r.getCigar.getCigarElements) {
-        if (c.getOperator == CigarOperator.I) {
+        if (!c.getOperator.consumesReferenceBases) {
           tmpTable(i) += (r -> r.getReadString.substring(j, j + c.getLength))
         } else {
           i += c.getLength
         }
-        j += c.getLength
+        if (c.getOperator.consumesReadBases) j += c.getLength
       }
     }
     insertionsTable = tmpTable.map(l => l.toMap)
