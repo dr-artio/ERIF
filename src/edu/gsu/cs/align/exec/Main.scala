@@ -31,7 +31,7 @@ object Main {
       val path_to_ext_ref = path_to_ref + "_ext.fasta"
       FASTAParser.writeAsFASTA(exRef, path_to_ext_ref)
       val ext_len = exRef.length
-      InsertionsAligner.buildAndInitInsertionsTable(reads, ext_len)
+      InsertionsAligner.buildAndInitInsertionsTable(reads, ext_len + 1)
       InsertionsAligner.performInsertionsAlignment
       val e_r = reads.map(r => InsertionsAligner.transformRead(r, ext_len))
       MSAWriter.writeExtendedReadsInInternalFormat(path_to_sam + "_ext.txt",
