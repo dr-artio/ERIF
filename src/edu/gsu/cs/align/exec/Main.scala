@@ -1,7 +1,7 @@
 package edu.gsu.cs.align.exec
 
 import edu.gsu.cs.align.io.{MSAWriter, FASTAParser, SAMParser}
-import java.io.FileNotFoundException
+import java.io.{File, FileNotFoundException}
 import edu.gsu.cs.align.model.{InsertionsAligner, InsertionsHandler}
 
 
@@ -54,6 +54,10 @@ object Main {
   private def parseArgs(args: Array[String]) = {
     val sam = args.indexOf(ALIGNED_READS_PARAMETER)
     val g = args.indexOf(REFERENCE_PARAMETER)
+    val o = args.indexOf(OUTPUT_PARAMETER)
+    if (o != -1 && args.length > o + 1 && !args(o+1).endsWith(File.separator)) {
+      args(o+1) = args(o+1) + File.separator
+    }
     var path_to_sam = ""
     path_to_sam = if (sam == -1) runInDelFixer(args) else args(sam + 1)
     if (g == -1) {

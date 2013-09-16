@@ -5,8 +5,84 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>groupId</groupId>
-    <artifactId>AlignAndExtendRef</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>ERIF</artifactId>
+    <version>1.0</version>
+
+    <name>ERIF</name>
+    <url>http://alan.cs.gsu.edu/NGS/?q=content/kgem</url>
+
+    <developers>
+        <developer>
+            <id>night-stalker</id>
+            <name>Alex Artyomenko</name>
+            <email>aartyomenko@cs.gsu.edu</email>
+        </developer>
+    </developers>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <!-- <finalName>k-gem</finalName> -->
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <archive>
+                        <manifest>
+                            <mainClass>edu.gsu.cs.kgem.exec.Main</mainClass>
+                            <addDefaultImplementationEntries>
+                                true
+                            </addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <mode>development</mode>
+
+                            <url>${project.url}</url>
+                            <author>Alex Artyomenko</author>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.scala-tools</groupId>
+                <artifactId>maven-scala-plugin</artifactId>
+                <version>2.15.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sourceDir>src</sourceDir>
+                    <jvmArgs>
+                        <jvmArg>-Xms1024m</jvmArg>
+                        <jvmArg>-Xmx2g</jvmArg>
+                    </jvmArgs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <dependency>
             <groupId>org.biojava</groupId>
@@ -44,6 +120,11 @@
             <artifactId>picard</artifactId>
             <version>1.86.0</version>
         </dependency>
+        <dependency>
+            <groupId>kgem</groupId>
+            <artifactId>kgem</artifactId>
+            <version>0.3.1</version>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>
@@ -57,32 +138,9 @@
             <url>https://github.com/tatsuhiro-t/argparse4j</url>
         </repository>
         <repository>
-            <id>paralelj-maven-repo</id>
-            <name>ParallelJ repository</name>
-            <url>http://repo1.maven.org/maven2/org/parallelj/parallelj/</url>
+            <id>kgem</id>
+            <name>KGEM repository</name>
+            <url>https://github.com/night-stalker/KGEM</url>
         </repository>
     </repositories>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.scala-tools</groupId>
-                <artifactId>maven-scala-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                            <goal>testCompile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <sourceDir>src</sourceDir>
-                    <jvmArgs>
-                        <jvmArg>-Xms1024m</jvmArg>
-                        <jvmArg>-Xmx2g</jvmArg>
-                    </jvmArgs>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>
