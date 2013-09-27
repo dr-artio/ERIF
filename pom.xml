@@ -120,11 +120,11 @@
             <artifactId>picard</artifactId>
             <version>1.86.0</version>
         </dependency>
-        <dependency>
-            <groupId>kgem</groupId>
-            <artifactId>kgem</artifactId>
-            <version>0.3.1</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>kgem</groupId>-->
+            <!--<artifactId>kgem</artifactId>-->
+            <!--<version>0.3.1</version>-->
+        <!--</dependency>-->
     </dependencies>
     <repositories>
         <repository>
@@ -137,10 +137,10 @@
             <name>argparse4j repository</name>
             <url>https://github.com/tatsuhiro-t/argparse4j</url>
         </repository>
-        <repository>
-            <id>kgem</id>
-            <name>KGEM repository</name>
-            <url>https://github.com/night-stalker/KGEM</url>
-        </repository>
+        <!--<repository>-->
+            <!--<id>kgem</id>-->
+            <!--<name>KGEM repository</name>-->
+            <!--<url>https://github.com/night-stalker/KGEM</url>-->
+        <!--</repository>-->
     </repositories>
 </project>

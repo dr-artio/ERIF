@@ -34,7 +34,13 @@ class FractionalString(len: Int) {
   def add(str: String) = {
     var i = 0
     for (d <- data) {
-      d(str(i)) += 1
+      val cur_symb = str(i)
+      if (d.contains(cur_symb))
+        d(cur_symb) += 1
+      else {
+        val avg = 1.0 / d.size
+        d.keys.foreach(k => d(k) += avg)
+      }
       i += 1
     }
   }
