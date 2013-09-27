@@ -39,7 +39,7 @@
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
-                            <mainClass>edu.gsu.cs.kgem.exec.Main</mainClass>
+                            <mainClass>edu.gsu.cs.align.exec.Main</mainClass>
                             <addDefaultImplementationEntries>
                                 true
                             </addDefaultImplementationEntries>
