@@ -133,7 +133,8 @@ object InsertionsAligner {
       var score = 1.0
       while (i < n) {
         if (!gaps.contains(i)) {
-          score *= cons.data(i)(str(j))
+          val dt = cons.data(i)
+          if (dt.contains(str(j))) score *= dt(str(j))
           j += 1
         }
         i += 1
