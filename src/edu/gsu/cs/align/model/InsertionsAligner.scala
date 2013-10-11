@@ -13,7 +13,7 @@ import collection.JavaConversions._
  */
 object InsertionsAligner {
   private var insertionsTable: Array[Map[SAMRecord, String]] = null
-  private val S = " "
+  private val S = "N"
   private val DASH = "-"
 
   def transformRead(read: SAMRecord, ext_len: Int) = {

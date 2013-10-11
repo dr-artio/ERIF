@@ -3,6 +3,9 @@ package edu.gsu.cs.align.exec
 import edu.gsu.cs.align.io.{MSAWriter, FASTAParser, SAMParser}
 import java.io.{File, FileNotFoundException}
 import edu.gsu.cs.align.model.{InsertionsAligner, InsertionsHandler}
+import org.biojava3.core.sequence.DNASequence
+import org.biojava3.core.sequence.io.FastaWriterHelper
+import collection.JavaConversions._
 
 
 /**
@@ -33,9 +36,15 @@ object Main {
       val ext_len = exRef.length
       InsertionsAligner.buildAndInitInsertionsTable(reads, ext_len + 1)
       InsertionsAligner.performInsertionsAlignment
-      val e_r = reads.map(r => InsertionsAligner.transformRead(r, ext_len))
-      MSAWriter.writeExtendedReadsInInternalFormat(path_to_sam + "_ext.txt",
-        e_r)
+      val e_r = reads.map(r => {
+        val seq = InsertionsAligner.transformRead(r, ext_len)
+        val record = new DNASequence(seq)
+        record.setOriginalHeader(r.getReadName)
+        record
+      })
+      //MSAWriter.writeExtendedReadsInInternalFormat(path_to_sam + "_ext.txt",e_r)
+      val fl = new File(path_to_sam).getParent + File.separator + "aligned_reads.fas"
+      FastaWriterHelper.writeNucleotideSequence(new File(fl), e_r)
 
     } catch {
       case e: FileNotFoundException => {
