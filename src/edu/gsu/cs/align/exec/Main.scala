@@ -43,7 +43,7 @@ object Main {
         record
       })
       //MSAWriter.writeExtendedReadsInInternalFormat(path_to_sam + "_ext.txt",e_r)
-      val fl = new File(path_to_sam).getParent + File.separator + "aligned_reads.fas"
+      val fl = new File(path_to_sam).getAbsoluteFile.getParent + File.separator + "aligned_reads.fas"
       FastaWriterHelper.writeNucleotideSequence(new File(fl), e_r)
 
     } catch {
