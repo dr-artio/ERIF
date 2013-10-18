@@ -32,7 +32,7 @@ object Main {
       InsertionsHandler.buildInsertionTable(reads, ref.getLength + 1)
       val exRef = InsertionsHandler.getExtendedReference(ref.getSequenceAsString)
       val path_to_ext_ref = path_to_ref + "_ext.fasta"
-      FASTAParser.writeAsFASTA(exRef, path_to_ext_ref)
+      //FASTAParser.writeAsFASTA(exRef, path_to_ext_ref)
       val ext_len = exRef.length
       InsertionsAligner.buildAndInitInsertionsTable(reads, ext_len + 1)
       InsertionsAligner.performInsertionsAlignment
