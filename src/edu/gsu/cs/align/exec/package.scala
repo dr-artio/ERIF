@@ -1,7 +1,7 @@
 package edu.gsu.cs.align
 
 import java.io.File
-import com.simontuffs.onejar.Boot
+import ch.ethz.bsse.indelfixer.minimal.Start
 import net.sf.samtools.SAMRecord
 import org.biojava3.core.sequence.DNASequence
 import edu.gsu.cs.align.io.{SAMParser, FASTAParser}
@@ -26,7 +26,7 @@ package object exec {
 
   def runInDelFixer(args: Array[String]) = {
     try {
-      Boot.run(args)
+      Start.main(args)
     } catch {
       case e: Exception => {
         System.err.println(e.getMessage)

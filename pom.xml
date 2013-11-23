@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>groupId</groupId>
-    <artifactId>ERIF</artifactId>
+    <groupId>edu.gsu.cs</groupId>
+    <artifactId>erif</artifactId>
     <version>1.0</version>
 
     <name>ERIF</name>
@@ -29,38 +29,38 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <!-- <finalName>k-gem</finalName> -->
-                    <appendAssemblyId>false</appendAssemblyId>
-                    <archive>
-                        <manifest>
-                            <mainClass>edu.gsu.cs.align.exec.Main</mainClass>
-                            <addDefaultImplementationEntries>
-                                true
-                            </addDefaultImplementationEntries>
-                        </manifest>
-                        <manifestEntries>
-                            <mode>development</mode>
+            <!--<plugin>-->
+                <!--<artifactId>maven-assembly-plugin</artifactId>-->
+                <!--<configuration>-->
+                    <!--<descriptorRefs>-->
+                        <!--<descriptorRef>jar-with-dependencies</descriptorRef>-->
+                    <!--</descriptorRefs>-->
+                    <!--&lt;!&ndash; <finalName>k-gem</finalName> &ndash;&gt;-->
+                    <!--<appendAssemblyId>false</appendAssemblyId>-->
+                    <!--<archive>-->
+                        <!--<manifest>-->
+                            <!--<mainClass>edu.gsu.cs.align.exec.Main</mainClass>-->
+                            <!--<addDefaultImplementationEntries>-->
+                                <!--true-->
+                            <!--</addDefaultImplementationEntries>-->
+                        <!--</manifest>-->
+                        <!--<manifestEntries>-->
+                            <!--<mode>development</mode>-->
 
-                            <url>${project.url}</url>
-                            <author>Alex Artyomenko</author>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+                            <!--<url>${project.url}</url>-->
+                            <!--<author>Alex Artyomenko</author>-->
+                        <!--</manifestEntries>-->
+                    <!--</archive>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<phase>package</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>single</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
             <plugin>
                 <groupId>org.scala-tools</groupId>
                 <artifactId>maven-scala-plugin</artifactId>
@@ -121,7 +121,7 @@
             <version>1.86.0</version>
         </dependency>
         <dependency>
-            <groupId>align</groupId>
+            <groupId>ch.ethz.bsse</groupId>
             <artifactId>indelfixer</artifactId>
             <version>0.9.1</version>
         </dependency>
@@ -136,11 +136,6 @@
             <id>argparse4j-maven-repo</id>
             <name>argparse4j repository</name>
             <url>https://github.com/tatsuhiro-t/argparse4j</url>
-        </repository>
-        <repository>
-            <id>in-project</id>
-            <name>In Project Repo</name>
-            <url>file://${project.basedir}\lib</url>
         </repository>
     </repositories>
 </project>

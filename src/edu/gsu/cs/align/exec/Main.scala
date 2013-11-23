@@ -55,8 +55,6 @@ object Main {
         e.printStackTrace
       }
       case e: Exception => e.printStackTrace
-    } finally {
-        System.exit(0)
     }
   }
 
