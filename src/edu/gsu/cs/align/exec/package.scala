@@ -5,6 +5,7 @@ import ch.ethz.bsse.indelfixer.minimal.Start
 import net.sf.samtools.SAMRecord
 import org.biojava3.core.sequence.DNASequence
 import edu.gsu.cs.align.io.{SAMParser, FASTAParser}
+import ch.ethz.bsse.indelfixer.utils.StatusUpdate
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,6 +28,7 @@ package object exec {
   def runInDelFixer(args: Array[String]) = {
     try {
       Start.main(args)
+      ResetStatusCounts
     } catch {
       case e: Exception => {
         System.err.println(e.getMessage)
@@ -43,5 +45,14 @@ package object exec {
   def initReadsAdnReference(path_to_ref: String, path_to_sam: String) = {
     ref = FASTAParser.readReference(path_to_ref)
     reads = SAMParser.readSAMFile(path_to_sam)
+  }
+
+  private def ResetStatusCounts {
+    StatusUpdate.readCount = 0
+    StatusUpdate.alignCount1 = 0
+    StatusUpdate.alignCount2 = 0
+    StatusUpdate.alignCount3 = 0
+    StatusUpdate.tooSmallCount = 0
+    StatusUpdate.unmappedCount = 0
   }
 }

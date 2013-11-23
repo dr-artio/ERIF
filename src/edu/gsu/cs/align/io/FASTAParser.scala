@@ -28,7 +28,7 @@ object FASTAParser {
 
   def readReference(path: String): DNASequence = {
     val tmp = readFASTAFile(path)
-    return tmp.head
+    return tmp.maxBy(_.getLength)
   }
 
   def writeAsFASTA(seq: String, path: String) = {
