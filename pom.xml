@@ -29,38 +29,38 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
-            <!--<plugin>-->
-                <!--<artifactId>maven-assembly-plugin</artifactId>-->
-                <!--<configuration>-->
-                    <!--<descriptorRefs>-->
-                        <!--<descriptorRef>jar-with-dependencies</descriptorRef>-->
-                    <!--</descriptorRefs>-->
-                    <!--&lt;!&ndash; <finalName>k-gem</finalName> &ndash;&gt;-->
-                    <!--<appendAssemblyId>false</appendAssemblyId>-->
-                    <!--<archive>-->
-                        <!--<manifest>-->
-                            <!--<mainClass>edu.gsu.cs.align.exec.Main</mainClass>-->
-                            <!--<addDefaultImplementationEntries>-->
-                                <!--true-->
-                            <!--</addDefaultImplementationEntries>-->
-                        <!--</manifest>-->
-                        <!--<manifestEntries>-->
-                            <!--<mode>development</mode>-->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <!-- <finalName>k-gem</finalName> -->
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <archive>
+                        <manifest>
+                            <mainClass>edu.gsu.cs.align.exec.Main</mainClass>
+                            <addDefaultImplementationEntries>
+                                true
+                            </addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <mode>development</mode>
 
-                            <!--<url>${project.url}</url>-->
-                            <!--<author>Alex Artyomenko</author>-->
-                        <!--</manifestEntries>-->
-                    <!--</archive>-->
-                <!--</configuration>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<phase>package</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>single</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
+                            <url>${project.url}</url>
+                            <author>Alex Artyomenko</author>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.scala-tools</groupId>
                 <artifactId>maven-scala-plugin</artifactId>
@@ -113,7 +113,7 @@
         <dependency>
             <groupId>net.sourceforge.argparse4j</groupId>
             <artifactId>argparse4j</artifactId>
-            <version>0.4.0</version>
+            <version>0.4.1</version>
         </dependency>
         <dependency>
             <groupId>org.utgenome.thirdparty</groupId>
@@ -123,7 +123,7 @@
         <dependency>
             <groupId>ch.ethz.bsse</groupId>
             <artifactId>indelfixer</artifactId>
-            <version>0.9.1</version>
+            <version>1.1</version>
         </dependency>
     </dependencies>
     <repositories>

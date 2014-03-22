@@ -2,10 +2,11 @@ package edu.gsu.cs.align
 
 import java.io.File
 import ch.ethz.bsse.indelfixer.minimal.Start
-import net.sf.samtools.SAMRecord
+import net.sf.samtools.{CigarOperator, SAMRecord}
 import org.biojava3.core.sequence.DNASequence
 import edu.gsu.cs.align.io.{SAMParser, FASTAParser}
 import ch.ethz.bsse.indelfixer.utils.StatusUpdate
+import scala.collection.JavaConversions._
 
 /**
  * Created with IntelliJ IDEA.
@@ -45,6 +46,12 @@ package object exec {
   def initReadsAdnReference(path_to_ref: String, path_to_sam: String) = {
     ref = FASTAParser.readReference(path_to_ref)
     reads = SAMParser.readSAMFile(path_to_sam)
+    println("\nUnfiltered reads:" + reads.size)
+    reads = reads.filter(r => {
+     val tmp = r.getCigar.getCigarElements.filter(c => c.getOperator == CigarOperator.I).map(_.getLength)
+     tmp.isEmpty || tmp.max < 25
+    })
+    println("Filtered reads:" + reads.size)
   }
 
   private def ResetStatusCounts {

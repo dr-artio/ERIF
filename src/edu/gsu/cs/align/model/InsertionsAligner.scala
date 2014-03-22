@@ -67,7 +67,7 @@ object InsertionsAligner {
    */
   def performInsertionsAlignment = {
     val len = insertionsTable.length
-    for (i <- 0 until len) {
+    for (i <- (0 until len).par) {
       val map = insertionsTable(i)
       if (!map.isEmpty) {
         insertionsTable(i) = alignInsertedRegion(map)
