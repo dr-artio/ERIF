@@ -6,7 +6,7 @@
 
     <groupId>edu.gsu.cs</groupId>
     <artifactId>erif</artifactId>
-    <version>1.0</version>
+    <version>1.0.1b</version>
 
     <name>ERIF</name>
     <url>http://alan.cs.gsu.edu/NGS/?q=content/kgem</url>

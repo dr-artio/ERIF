@@ -7,6 +7,8 @@ import org.biojava3.core.sequence.DNASequence
 import edu.gsu.cs.align.io.{SAMParser, FASTAParser}
 import ch.ethz.bsse.indelfixer.utils.StatusUpdate
 import scala.collection.JavaConversions._
+import edu.gsu.cs.align.model.WindowSlicer
+import edu.gsu.cs.align.io.SAMParser.getSAMFileHeader
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,10 +23,20 @@ package object exec {
   val INPUT_PARAMETER = "-i"
   val REFERENCE_PARAMETER = "-g"
   val ALIGNED_READS_PARAMETER = "-sam"
+  val INTERVAL_PARAMETER = "-r"
   val READS_FILE = "reads.sam"
   var output_folder: File = null
-  var reads: Iterable[SAMRecord] = null
+  var reads: List[SAMRecord] = null
   var ref: DNASequence = null
+  var start = 0
+  var end = -1
+
+  def getOutputDirPath = {
+    if (!(output_folder.exists && output_folder.isDirectory)) {
+      output_folder.mkdir
+    }
+    output_folder.getAbsolutePath
+  }
 
   def runInDelFixer(args: Array[String]) = {
     try {
@@ -36,9 +48,6 @@ package object exec {
         System.exit(-1)
       }
     }
-    val o = args.indexOf(OUTPUT_PARAMETER)
-    if (o == -1) output_folder = new File(System.getProperty(USER_DIR))
-    else output_folder = new File(args(o + 1))
 
     output_folder.getAbsolutePath + File.separator + READS_FILE
   }
@@ -51,6 +60,10 @@ package object exec {
      val tmp = r.getCigar.getCigarElements.filter(c => c.getOperator == CigarOperator.I).map(_.getLength)
      tmp.isEmpty || tmp.max < 25
     })
+    if (end != -1) {
+      val w = WindowSlicer.cutWindowFromGlobalAlignment(start, end - start, reads, getSAMFileHeader(path_to_sam))
+      reads = w.getReads
+    }
     println("Filtered reads:" + reads.size)
   }
 

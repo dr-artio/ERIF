@@ -16,12 +16,12 @@ object InsertionsAligner {
   private val S = "N"
   private val DASH = "-"
 
-  def transformRead(read: SAMRecord, ext_len: Int) = {
+  def transformRead(read: SAMRecord, ext_len: Int, start: Int = 0) = {
     val sb = new StringBuilder
     val readSeq = read.getReadString
     var ext_index = 0
     var index = read.getAlignmentStart - 1
-    for (i <- 0 until read.getAlignmentStart) {
+    for (i <- start until read.getAlignmentStart) {
       ext_index += edu.gsu.cs.align.model.InsertionsHandler.extInserts(i) + 1
     }
     ext_index -= 1
@@ -56,9 +56,10 @@ object InsertionsAligner {
         i += c.getLength
       }
     }
-    sb ++= S * (ext_len - sb.toString.length)
+    sb ++= S * (ext_len - sb.toString.length - start)
     sb.toString
   }
+
 
   /**
    * Perform alignment of inserted regions,
