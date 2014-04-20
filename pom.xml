@@ -23,7 +23,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>3.1</version>
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
@@ -37,6 +37,7 @@
                     </descriptorRefs>
                     <!-- <finalName>k-gem</finalName> -->
                     <appendAssemblyId>false</appendAssemblyId>
+                    
                     <archive>
                         <manifest>
                             <mainClass>edu.gsu.cs.align.exec.Main</mainClass>
@@ -77,12 +78,46 @@
                     <sourceDir>src</sourceDir>
                     <jvmArgs>
                         <jvmArg>-Xms1024m</jvmArg>
-                        <jvmArg>-Xmx2g</jvmArg>
+                        <jvmArg>-Xmx1g</jvmArg>
                     </jvmArgs>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>conf</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.7</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <configuration>
+                                    <target>
+                                        <exec
+                                                dir="${project.build.directory}"
+                                                executable="cp"
+                                                failonerror="false">
+                                            <arg line="${project.build.finalName}.jar /home/aartsiomenka1/alan/home/code/ERIF" />
+                                        </exec>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>org.biojava</groupId>
@@ -97,32 +132,27 @@
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
-            <version>2.10.1</version>
+            <version>2.10.3</version>
         </dependency>
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-compiler</artifactId>
-            <version>2.10.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.scalatest</groupId>
-            <artifactId>scalatest_2.10</artifactId>
-            <version>2.0.M8</version>
+            <version>2.10.3</version>
         </dependency>
         <!-- other biojava jars as needed -->
         <dependency>
             <groupId>net.sourceforge.argparse4j</groupId>
             <artifactId>argparse4j</artifactId>
-            <version>0.4.1</version>
+            <version>0.4.3</version>
         </dependency>
         <dependency>
             <groupId>org.utgenome.thirdparty</groupId>
             <artifactId>picard</artifactId>
-            <version>1.86.0</version>
+            <version>1.102.0</version>
         </dependency>
         <dependency>
             <groupId>ch.ethz.bsse</groupId>
-            <artifactId>indelfixer</artifactId>
+            <artifactId>InDelFixer</artifactId>
             <version>1.1</version>
         </dependency>
     </dependencies>

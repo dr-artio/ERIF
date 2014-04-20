@@ -68,8 +68,8 @@ package object exec {
     log("Total reads:" + reads.size)
     log("Filtering...")
     var fReads = reads.filter(r => {
-      val tmp = r.getCigar.getCigarElements.filter(c => c.getOperator == CigarOperator.I).map(_.getLength)
-      tmp.isEmpty || tmp.max < 25
+      val tmp = r.getCigar.getCigarElements.view.filter(c => c.getOperator == CigarOperator.I).map(_.getLength)
+      r.getReadLength > 2000 && (tmp.isEmpty || tmp.max < 10)
     })
     if (end != -1) {
       val w = WindowSlicer.cutWindowFromGlobalAlignment(start, end - start, fReads, header)
@@ -86,11 +86,17 @@ package object exec {
     //FASTAParser.writeAsFASTA(exRef, path_to_ext_ref)
     val ext_len = if (end == -1) exRef.length else end + exRef.length - ref.getLength
     InsertionsAligner.buildAndInitInsertionsTable(reads, ext_len + 1)
-    log("Table built")
+    log("Table built, ext_len: %d".format(ext_len))
+    log("Cleaning up insertions table...")
+    val (count, e_len) = InsertionsAligner.cleanUpInsertionTable(-1, ext_len)
+    log("Entries dropped: %d new length: %d".format(count, e_len))
+    log("Cleaned!")
+
     InsertionsAligner.performInsertionsAlignment
     log("Insertions aligned")
+
     reads.map(r => {
-      val seq = InsertionsAligner.transformRead(r, ext_len, start)
+      val seq = InsertionsAligner.transformRead(r, ref.getLength + InsertionsHandler.extInserts.sum, start)
       val record = new DNASequence(seq)
       record.setOriginalHeader(r.getReadName)
       record

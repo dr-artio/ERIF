@@ -51,8 +51,10 @@ object InsertionsAligner {
           }
         }
       } else {
-        val ins = insertionsTable(index)(read)
-        sb ++= ins
+        if (insertionsTable(index) contains read) {
+          val ins = insertionsTable(index)(read)
+          sb ++= ins
+        }
         i += c.getLength
       }
     }
@@ -104,6 +106,21 @@ object InsertionsAligner {
     insertionsTable = tmpTable.map(l => l.toMap)
   }
 
+  def cleanUpInsertionTable(thr: Int, ln: Int) = {
+    val len = insertionsTable.length
+    var count = 0
+    var l = ln
+    for (i <- 0 until len) {
+      if (insertionsTable(i).size <= thr) {
+        if (!insertionsTable(i).isEmpty) l -= InsertionsHandler.extInserts(i)
+        insertionsTable(i) = Map[SAMRecord, String]()
+        if (i < InsertionsHandler.extInserts.length) InsertionsHandler.extInserts(i) = 0
+        count += 1
+      }
+    }
+    (count, l + 1)
+  }
+
   /**
    * Align inserted region sequences.
    * Regions come from global alignment.
@@ -112,7 +129,7 @@ object InsertionsAligner {
    * @return
    * Aligned fragments
    */
-  def alignInsertedRegion(seqs: Map[SAMRecord, String]) = {
+  private def alignInsertedRegion(seqs: Map[SAMRecord, String]) = {
     val result = HashMap.empty[SAMRecord, String]
     val cons = buildConsensus(seqs.values)
     val maxl = cons.data.length
