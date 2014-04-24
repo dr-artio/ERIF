@@ -86,7 +86,28 @@
     </build>
     <profiles>
         <profile>
-            <id>conf</id>
+            <id>pack</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <version>2.4</version>
+                        <configuration></configuration>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>alan</id>
             <build>
                 <plugins>
                     <plugin>
@@ -99,9 +120,9 @@
                                     <target>
                                         <exec
                                                 dir="${project.build.directory}"
-                                                executable="cp"
+                                                executable="scp"
                                                 failonerror="false">
-                                            <arg line="${project.build.finalName}.jar /home/aartsiomenka1/alan/home/code/ERIF" />
+                                            <arg line="${project.build.finalName}-jar-with-dependencies.jar alan:/home/code/Butterfly/${project.build.finalName}.jar"/>
                                         </exec>
                                     </target>
                                 </configuration>
