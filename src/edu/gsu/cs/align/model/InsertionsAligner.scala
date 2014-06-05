@@ -1,7 +1,7 @@
 package edu.gsu.cs.align.model
 
 import scala.collection.mutable.HashMap
-import net.sf.samtools.{CigarOperator, SAMRecord}
+import net.sf.samtools.SAMRecord
 import collection.JavaConversions._
 
 /**
@@ -9,7 +9,6 @@ import collection.JavaConversions._
  * User: aartyomenko
  * Date: 7/23/13
  * Time: 3:43 PM
- * To change this template use File | Settings | File Templates.
  */
 object InsertionsAligner {
   private var insertionsTable: Array[Map[SAMRecord, String]] = null
@@ -20,7 +19,7 @@ object InsertionsAligner {
     val sb = new StringBuilder
     val readSeq = read.getReadString
     var ext_index = 0
-    var index = read.getAlignmentStart - 1
+    var index = read.getAlignmentStart
     for (i <- start until read.getAlignmentStart) {
       ext_index += edu.gsu.cs.align.model.InsertionsHandler.extInserts(i) + 1
     }
@@ -31,24 +30,23 @@ object InsertionsAligner {
       if (c.getOperator.consumesReferenceBases) {
         if (c.getOperator.consumesReadBases) {
           for (j <- 0 until c.getLength) {
-            index += 1
+
             sb += readSeq(i)
 
             sb ++= DASH * (if (!insertionsTable(index).contains(read))
               edu.gsu.cs.align.model.InsertionsHandler.extInserts(index)
               else 0)
             i += 1
-
-          }
-        } else {
-          for (j <- 0 until c.getLength) {
             index += 1
+          }
+        } else
+          for (j <- 0 until c.getLength) {
+
             sb ++= DASH
             sb ++= DASH * (if (!insertionsTable(index).contains(read))
               edu.gsu.cs.align.model.InsertionsHandler.extInserts(index)
               else 0)
-
-          }
+            index += 1
         }
       } else {
         if (insertionsTable(index) contains read) {
@@ -58,8 +56,8 @@ object InsertionsAligner {
         i += c.getLength
       }
     }
-    sb ++= S * (ext_len - sb.toString.length - start)
-    sb.toString
+    sb ++= S * (ext_len - sb.toString().length - start)
+    sb.toString()
   }
 
 
@@ -68,7 +66,7 @@ object InsertionsAligner {
    * store aligned regions in the insertions
    * table.
    */
-  def performInsertionsAlignment = {
+  def performInsertionsAlignment() = {
     val len = insertionsTable.length
     for (i <- (0 until len).par) {
       val map = insertionsTable(i)
@@ -179,7 +177,7 @@ object InsertionsAligner {
       }
       i += 1
     }
-    sb.toString
+    sb.toString()
   }
 
   private def buildConsensus(seqs: Iterable[String]) = {

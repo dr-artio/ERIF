@@ -38,14 +38,12 @@ object Main {
       log("Finished!")
 
     } catch {
-      case e: FileNotFoundException => {
+      case e: FileNotFoundException =>
         System.err.println(e.getMessage)
-      }
-      case e: IndexOutOfBoundsException => {
+      case e: IndexOutOfBoundsException =>
         System.err.println(e.getMessage)
-        e.printStackTrace
-      }
-      case e: Exception => e.printStackTrace
+        e.printStackTrace()
+      case e: Exception => e.printStackTrace()
     }
   }
 }

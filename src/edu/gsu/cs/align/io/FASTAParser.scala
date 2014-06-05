@@ -5,6 +5,8 @@ import org.biojava3.core.sequence.io.FastaReaderHelper.readFastaDNASequence
 import org.biojava3.core.sequence.io.FastaWriterHelper.writeNucleotideSequence
 import org.biojava3.core.sequence.DNASequence
 import collection.JavaConversions._
+import org.biojava3.core.sequence.io.{FileProxyDNASequenceCreator, GenericFastaHeaderParser, FastaReader}
+import org.biojava3.core.sequence.compound.{AmbiguityDNACompoundSet, NucleotideCompound}
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,8 +29,8 @@ object FASTAParser {
   }
 
   def readReference(path: String): DNASequence = {
-    val tmp = readFASTAFile(path)
-    return tmp.maxBy(_.getLength)
+    val tmp = readFASTAFileAmbiguity(path)
+    tmp.maxBy(_.getLength)
   }
 
   def writeAsFASTA(seq: String, path: String) = {
@@ -36,5 +38,24 @@ object FASTAParser {
     val dnaSeq = new DNASequence(seq)
     dnaSeq.setOriginalHeader("ExtConsensus")
     writeNucleotideSequence(file, List(dnaSeq))
+  }
+
+  def readFASTAFileAmbiguity(file: File): Iterable[DNASequence] = {
+    if (!file.exists || !file.canRead) {
+      System.err.println("Reference file doesn't exists or unreadable!")
+      System.exit(-1)
+    }
+    val fastaProxyReader = new FastaReader(file,
+      new GenericFastaHeaderParser[DNASequence, NucleotideCompound](),
+      new FileProxyDNASequenceCreator(file,
+        AmbiguityDNACompoundSet.getDNACompoundSet
+        //new FastaSequenceParser()
+      )
+    )
+    fastaProxyReader.process().values()
+  }
+
+  def readFASTAFileAmbiguity(path: String): Iterable[DNASequence] = {
+    readFASTAFileAmbiguity(new File(path))
   }
 }

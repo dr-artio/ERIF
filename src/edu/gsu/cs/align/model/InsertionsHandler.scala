@@ -39,6 +39,6 @@ object InsertionsHandler {
       sb += ref(i)
       for (s <- 0 until extInserts(i)) sb += '-'
     }
-    sb.toString
+    sb.toString()
   }
 }
