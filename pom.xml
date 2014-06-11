@@ -128,12 +128,7 @@
         <dependency>
             <groupId>org.biojava</groupId>
             <artifactId>biojava3-core</artifactId>
-            <version>3.0.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.biojava</groupId>
-            <artifactId>biojava3-alignment</artifactId>
-            <version>3.0.5</version>
+            <version>3.0.7</version>
         </dependency>
         <dependency>
             <groupId>org.scala-lang</groupId>
@@ -156,11 +151,11 @@
             <artifactId>picard</artifactId>
             <version>1.102.0</version>
         </dependency>
-        <dependency>
-            <groupId>ch.ethz.bsse</groupId>
-            <artifactId>InDelFixer</artifactId>
-            <version>1.1</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>ch.ethz.bsse</groupId>-->
+            <!--<artifactId>InDelFixer</artifactId>-->
+            <!--<version>1.1</version>-->
+        <!--</dependency>-->
     </dependencies>
     <repositories>
         <repository>

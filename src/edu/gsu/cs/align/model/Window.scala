@@ -20,7 +20,7 @@ class Window(globalStart: Int, width: Int, reads: List[SAMRecord], header: SAMFi
     filename = "%s_st%d_w%d.sam".format(path, globalStart, width)
   }
 
-  def writeWindow = {
+  def writeWindow() = {
     val file = new File(filename)
     file.createNewFile()
     val wr = new SAMTextWriter(file)

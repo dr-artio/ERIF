@@ -4,6 +4,8 @@ import scala.collection.mutable.HashMap
 import net.sf.samtools.SAMRecord
 import collection.JavaConversions._
 
+import edu.gsu.cs.align.model.InsertionsHandler.extInserts
+
 /**
  * Created with IntelliJ IDEA.
  * User: aartyomenko
@@ -19,34 +21,23 @@ object InsertionsAligner {
     val sb = new StringBuilder
     val readSeq = read.getReadString
     var ext_index = 0
-    var index = read.getAlignmentStart
-    for (i <- start until read.getAlignmentStart) {
+    var index = read.getAlignmentStart - 1
+    for (i <- start until index) {
       ext_index += edu.gsu.cs.align.model.InsertionsHandler.extInserts(i) + 1
     }
-    ext_index -= 1
     sb ++= S * ext_index
     var i = 0
     for (c <- read.getCigar.getCigarElements) {
       if (c.getOperator.consumesReferenceBases) {
-        if (c.getOperator.consumesReadBases) {
-          for (j <- 0 until c.getLength) {
+        for (j <- 0 until c.getLength) {
+          sb ++= (if (c.getOperator.consumesReadBases) {i += 1;readSeq(i - 1).toString} else DASH)
 
-            sb += readSeq(i)
-
-            sb ++= DASH * (if (!insertionsTable(index).contains(read))
-              edu.gsu.cs.align.model.InsertionsHandler.extInserts(index)
-              else 0)
-            i += 1
-            index += 1
+          if (insertionsTable(index).contains(read)) {
+            //sb ++= insertionsTable(index)(read)
+          } else {
+            sb ++= (DASH * extInserts(index))
           }
-        } else
-          for (j <- 0 until c.getLength) {
-
-            sb ++= DASH
-            sb ++= DASH * (if (!insertionsTable(index).contains(read))
-              edu.gsu.cs.align.model.InsertionsHandler.extInserts(index)
-              else 0)
-            index += 1
+          index += 1
         }
       } else {
         if (insertionsTable(index) contains read) {
@@ -60,6 +51,13 @@ object InsertionsAligner {
     sb.toString()
   }
 
+  private def getInsertionOrPadding(index: Int, read: SAMRecord): String = {
+    if (insertionsTable(index) contains read) {
+      insertionsTable(index)(read)
+    } else {
+      DASH * extInserts(index)
+    }
+  }
 
   /**
    * Perform alignment of inserted regions,
@@ -70,7 +68,7 @@ object InsertionsAligner {
     val len = insertionsTable.length
     for (i <- (0 until len).par) {
       val map = insertionsTable(i)
-      if (!map.isEmpty) {
+      if (map.nonEmpty) {
         insertionsTable(i) = alignInsertedRegion(map)
       }
     }
@@ -110,7 +108,7 @@ object InsertionsAligner {
     var l = ln
     for (i <- 0 until len) {
       if (insertionsTable(i).size <= thr) {
-        if (!insertionsTable(i).isEmpty) l -= InsertionsHandler.extInserts(i)
+        if (insertionsTable(i).nonEmpty) l -= InsertionsHandler.extInserts(i)
         insertionsTable(i) = Map[SAMRecord, String]()
         if (i < InsertionsHandler.extInserts.length) InsertionsHandler.extInserts(i) = 0
         count += 1

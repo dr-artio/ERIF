@@ -16,7 +16,7 @@ object InsertionsHandler {
   var extInserts: Array[Int] = null
 
   def buildInsertionTable(reads: Iterable[SAMRecord], n: Int) = {
-    insertions = (1 to n).map(x => new ListBuffer[SAMRecord])
+    insertions = (0 until n).view.map(x => new ListBuffer[SAMRecord]).toIndexedSeq
     extInserts = new Array[Int](n)
 
     for (read <- reads){
