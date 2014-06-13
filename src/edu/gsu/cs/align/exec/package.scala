@@ -1,17 +1,17 @@
 package edu.gsu.cs.align
 
-import java.io.{FileWriter, File}
-import ch.ethz.bsse.indelfixer.minimal.Start
-import net.sf.samtools.{SAMFileHeader, CigarOperator, SAMRecord}
-import org.biojava3.core.sequence.DNASequence
-import edu.gsu.cs.align.io.{SAMParser, FASTAParser}
-import ch.ethz.bsse.indelfixer.utils.StatusUpdate
-import scala.collection.JavaConversions._
-import edu.gsu.cs.align.model.{InsertionsAligner, InsertionsHandler, WindowSlicer}
-import edu.gsu.cs.align.io.SAMParser.getSAMFileHeader
-import java.util.Date
+import java.io.{File, FileWriter}
 import java.text.SimpleDateFormat
+import java.util.Date
+
+import edu.gsu.cs.align.io.SAMParser.getSAMFileHeader
+import edu.gsu.cs.align.io.{FASTAParser, SAMParser}
+import edu.gsu.cs.align.model.{InsertionsAligner, InsertionsHandler, WindowSlicer}
+import net.sf.samtools.{CigarOperator, SAMFileHeader, SAMRecord}
+import org.biojava3.core.sequence.DNASequence
 import org.biojava3.core.sequence.io.FastaWriterHelper
+
+import scala.collection.JavaConversions._
 
 /**
  * Created with IntelliJ IDEA.
@@ -43,20 +43,20 @@ package object exec {
     }
     output_folder.getAbsolutePath
   }
-
-  private def runInDelFixer(args: Array[String]) = {
-    try {
-      Start.main(args)
-      ResetStatusCounts
-    } catch {
-      case e: Exception => {
-        System.err.println(e.getMessage)
-        System.exit(-1)
-      }
-    }
-
-    output_folder.getAbsolutePath + File.separator + READS_FILE
-  }
+//
+//  private def runInDelFixer(args: Array[String]) = {
+//    try {
+//      Start.main(args)
+//      ResetStatusCounts
+//    } catch {
+//      case e: Exception => {
+//        System.err.println(e.getMessage)
+//        System.exit(-1)
+//      }
+//    }
+//
+//    output_folder.getAbsolutePath + File.separator + READS_FILE
+//  }
 
   protected[exec] def initReadsAdnReference(path_to_ref: String, path_to_sam: String) = {
     ref = FASTAParser.readReference(path_to_ref)
@@ -69,7 +69,7 @@ package object exec {
     log("Filtering...")
     var fReads = reads.filter(r => {
       val tmp = r.getCigar.getCigarElements.view.filter(c => c.getOperator == CigarOperator.I).map(_.getLength)
-      r.getReadLength > 2000 && (tmp.isEmpty || tmp.max < 10)
+      tmp.isEmpty || tmp.max < 10
     })
     if (end != -1) {
       val w = WindowSlicer.cutWindowFromGlobalAlignment(start, end - start, fReads, header)
@@ -88,15 +88,15 @@ package object exec {
     InsertionsAligner.buildAndInitInsertionsTable(reads, ext_len + 1)
     log("Table built, ext_len: %d".format(ext_len))
     log("Cleaning up insertions table...")
-    val (count, e_len) = InsertionsAligner.cleanUpInsertionTable(-1, ext_len)
+    val (count, e_len) = InsertionsAligner.cleanUpInsertionTable(0, ext_len)
     log("Entries dropped: %d new length: %d".format(count, e_len))
     log("Cleaned!")
 
-    InsertionsAligner.performInsertionsAlignment
+    InsertionsAligner.performInsertionsAlignment()
     log("Insertions aligned")
 
     reads.map(r => {
-      val seq = InsertionsAligner.transformRead(r, ref.getLength + InsertionsHandler.extInserts.sum, start)
+      val seq = InsertionsAligner.transformRead(r, e_len, start)
       val record = new DNASequence(seq)
       record.setOriginalHeader(r.getReadName)
       record
@@ -122,7 +122,7 @@ package object exec {
     if (o == -1) output_folder = new File(System.getProperty(USER_DIR))
     else output_folder = new File(args(o + 1))
     var path_to_sam = ""
-    path_to_sam = if (sam == -1) runInDelFixer(args) else args(sam + 1)
+    path_to_sam = /*if (sam == -1) runInDelFixer(args) else*/ args(sam + 1)
     if (g == -1) {
       System.err.println("Reference file is not specified! Use -g <path_to_ref>")
       System.exit(-1)
@@ -136,7 +136,7 @@ package object exec {
     (path_to_ref, path_to_sam)
   }
 
-  protected[exec] def printGreetings = {
+  protected[exec] def printGreetings() = {
     log(LINE)
     log(ERIF.format(Main.getClass.getPackage.getImplementationVersion))
     log(LINE)
@@ -147,12 +147,12 @@ package object exec {
     println("%s %s".format(sdf.format(date), mes))
   }
 
-  private def ResetStatusCounts {
-    StatusUpdate.readCount = 0
-    StatusUpdate.alignCount1 = 0
-    StatusUpdate.alignCount2 = 0
-    StatusUpdate.alignCount3 = 0
-    StatusUpdate.tooSmallCount = 0
-    StatusUpdate.unmappedCount = 0
-  }
+//  private def ResetStatusCounts() {
+//    StatusUpdate.readCount = 0
+//    StatusUpdate.alignCount1 = 0
+//    StatusUpdate.alignCount2 = 0
+//    StatusUpdate.alignCount3 = 0
+//    StatusUpdate.tooSmallCount = 0
+//    StatusUpdate.unmappedCount = 0
+//  }
 }

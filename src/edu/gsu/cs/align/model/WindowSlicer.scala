@@ -16,7 +16,7 @@ object WindowSlicer {
   }
 
   private def isOverlap(start: Int, width: Int, read: SAMRecord) = {
-    if (read.getAlignmentEnd < start + 0.1*width || read.getAlignmentStart >= start + 0.9*width)
+    if (read.getAlignmentEnd < start + 0.01*width || read.getAlignmentStart >= start + 0.99*width)
       false
     else
       true
