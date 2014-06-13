@@ -5,8 +5,8 @@ import org.biojava3.core.sequence.io.FastaReaderHelper.readFastaDNASequence
 import org.biojava3.core.sequence.io.FastaWriterHelper.writeNucleotideSequence
 import org.biojava3.core.sequence.DNASequence
 import collection.JavaConversions._
-import org.biojava3.core.sequence.io.{FileProxyDNASequenceCreator, GenericFastaHeaderParser, FastaReader}
-import org.biojava3.core.sequence.compound.{AmbiguityDNACompoundSet, NucleotideCompound}
+import org.biojava3.core.sequence.compound.{NucleotideCompound, AmbiguityDNACompoundSet}
+import org.biojava3.core.sequence.io.{FastaReader, GenericFastaHeaderParser, FileProxyDNASequenceCreator, FastaSequenceParser}
 
 /**
  * Created with IntelliJ IDEA.
@@ -48,8 +48,8 @@ object FASTAParser {
     val fastaProxyReader = new FastaReader(file,
       new GenericFastaHeaderParser[DNASequence, NucleotideCompound](),
       new FileProxyDNASequenceCreator(file,
-        AmbiguityDNACompoundSet.getDNACompoundSet
-        //new FastaSequenceParser()
+        AmbiguityDNACompoundSet.getDNACompoundSet,
+        new FastaSequenceParser()
       )
     )
     fastaProxyReader.process().values()

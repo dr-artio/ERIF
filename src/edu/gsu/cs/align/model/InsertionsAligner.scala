@@ -51,13 +51,6 @@ object InsertionsAligner {
     sb.toString()
   }
 
-  private def getInsertionOrPadding(index: Int, read: SAMRecord): String = {
-    if (insertionsTable(index) contains read) {
-      insertionsTable(index)(read)
-    } else {
-      DASH * extInserts(index)
-    }
-  }
 
   /**
    * Perform alignment of inserted regions,

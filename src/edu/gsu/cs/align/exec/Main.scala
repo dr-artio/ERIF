@@ -22,7 +22,7 @@ object Main {
    */
   def main(args: Array[String]): Unit = {
     try {
-      printGreetings
+      printGreetings()
       // parse arguments
       val (path_to_ref, path_to_sam) = parseArgs(args)
 

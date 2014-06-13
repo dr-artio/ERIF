@@ -30,7 +30,7 @@ package object exec {
   val ALIGNED_READS_PARAMETER = "-sam"
   val INTERVAL_PARAMETER = "-r"
   val READS_FILE = "reads.sam"
-  val sdf = new SimpleDateFormat("[hh:mm:ss a]");
+  val sdf = new SimpleDateFormat("[hh:mm:ss a]")
   var output_folder: File = null
   var reads: List[SAMRecord] = null
   var ref: DNASequence = null

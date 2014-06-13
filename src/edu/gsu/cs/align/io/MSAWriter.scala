@@ -44,12 +44,11 @@ object MSAWriter {
       for (read <- ext_reads) writer.write(read + '\n')
     }
     catch {
-      case e: Exception => {
+      case e: Exception =>
         System.err.println(e.getMessage)
-      }
     }
     finally {
-      writer.close
+      writer.close()
     }
   }
 }
